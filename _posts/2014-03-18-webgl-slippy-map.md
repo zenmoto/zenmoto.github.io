@@ -1,7 +1,10 @@
-# Prototype _COOLHV3_
+---
+layout: post
+title: Prototype COOLHV3
+---
 
-At Cobalt, we handle a lot of traffic.  We host the websites of many auto dealers, and we do a great deal of advertising
-on their behalf.  It's enough traffic that it's a challenge to really understand the scope of all that we do. We
+At my company we handle a lot of traffic.  We host websites of many auto dealers, and we do a great deal of advertising
+on our clients' behalf.  It's enough traffic that it's a challenge to really understand the scope of all that we do. We
 recently prototyped an attempt to show a good portion of our data on a map.  Conceptually it was very simple- just
 draw a circle on the map for every page viewed, every ad served, and every ad that was clicked on.  The challenge came
 in the rate of these events- at peak times we see more than 1200 events/second. Displaying that many events on an
@@ -55,17 +58,7 @@ many projections- conical, cylindrical, gnomonic, isometric. In the end, a proje
 [function](http://en.wikipedia.org/wiki/Function_(mathematics)) that takes an input of geographic coordinates and
 returns a set of cartesian coordinates suitable for a two-dimensional representation.
 
-[^great-circle-charts]: In a previous life I was a [Quartermaster](http://en.wikipedia.org/wiki/Quartermaster) in the
-U.S. Coast Guard.  During my tenure there I got to plan several long cruises- the first was from Sitka, AK to
-Honolulu, HI.  While we are all familiar with the adage that the 'closest distance between two points is a straight line',
-that doesn't make much sense in navigation- with a round planet, the closest distance between two points leads
-_through the earth_. When navigating across the Earth, the closest route will be a
-[great circle route](http://en.wikipedia.org/wiki/Great_circle_route)- an arc of a circle which passes through the center
-of the earth.  In order to determine this course, we plotted it on a small scale chart (covering a wide area) that
-used a [Gnomonic projection](http://en.wikipedia.org/wiki/Gnomonic_projection).  We then broke that line into segments,
-got the latitude and longitude of the endpoints of each segment, and then overlaid them on a Mercator projection to
-determine the course to steer for that segment of the voyage.  Just a tangential illustration of various uses of
-different projections.
+[^great-circle-charts]: In a previous life I was a [Quartermaster](http://en.wikipedia.org/wiki/Quartermaster) in the U.S. Coast Guard.  During my tenure there I got to plan several long cruises- the first was from Sitka, AK to Honolulu, HI.  While we are all familiar with the adage that the 'closest distance between two points is a straight line', that doesn't make much sense in navigation- with a round planet, the closest distance between two points leads _through the earth_. When navigating across the Earth, the closest route will be a [great circle route](http://en.wikipedia.org/wiki/Great_circle_route)- an arc of a circle which passes through the center of the earth.  In order to determine this course, we plotted it on a small scale chart (covering a wide area) that used a [Gnomonic projection](http://en.wikipedia.org/wiki/Gnomonic_projection).  We then broke that line into segments, got the latitude and longitude of the endpoints of each segment, and then overlaid them on a Mercator projection to determine the course to steer for that segment of the voyage.  Just a tangential illustration of various uses of different projections.
 
 ### But Why is Mercator Everywhere?
 
@@ -96,17 +89,12 @@ restrictions), you can use ModestMaps with Google Maps tiles.  Or Leaflet with O
 patterns) are similar; there is a difference between OpenStreetMaps and Google Maps in that the y-axis[^y_axis] is
 counts up from the bottom in one and from the top in the other, but generally they are all built on the same model.
 
-[^spherical_mercator]: The Earth is not, as many of us have been taught, a globe or a sphere.  It's wider at the equator
-than it is at the poles, making it an _oblong spheroid_.  In fact it's not actually even an oblong sphereoid- it's
-not regular in that description either.  As we describe the Earth more and more accurately, we use different
-[datums](http://en.wikipedia.org/wiki/Datum_(geodesy)) to better describe the unique shape of the earth.  The _spherical_
-in Spherical Mercator means that we simplify everything by presuming that the Earth is a sphere.  My high school physics
+[^spherical_mercator]: The Earth is not, as many of us have been taught, a globe or a sphere.  It's wider at the equator than it is at the poles, making it an _oblong spheroid_.  In fact it's not actually even an oblong sphereoid- it's not regular in that description either.  As we describe the Earth more and more accurately, we use different 
+
+[datums](http://en.wikipedia.org/wiki/Datum_(geodesy)) to better describe the unique shape of the earth.  The _spherical_ in Spherical Mercator means that we simplify everything by presuming that the Earth is a sphere.  My high school physics
 teacher would be proud.
 
-[^y_axis]: I talked a lot above about latitude __not__ being the _y_ axis- why am I using _y_ axis here?  It's a subtle
-point that took me a while to really understand- projection is taking a location on a globe and placing it on a
-cartesian plane. If we are talking about a point on the globe it's latitude.  If we are talking about a spot on a _map_,
-a two-dimensional representation, it's the _y_ axis as we suspected all along.
+[^y_axis]: I talked a lot above about latitude __not__ being the _y_ axis- why am I using _y_ axis here?  It's a subtle point that took me a while to really understand- projection is taking a location on a globe and placing it on a cartesian plane. If we are talking about a point on the globe it's latitude.  If we are talking about a spot on a _map_, a two-dimensional representation, it's the _y_ axis as we suspected all along.
 
 ## Leaflet.js
 
@@ -124,7 +112,7 @@ longitude to screen coordinates.
 
 We coordinate with the map by way of event callbacks on the Layer object.
 
-```javascript
+{% highlight javascript %}
    L.webglLayer({animationLoop: true})
         .on('initialize', function(e) {
             for (var mgr in drawing_managers) {
@@ -139,7 +127,7 @@ We coordinate with the map by way of event callbacks on the Layer object.
             }
         })
         .addTo(leaflet);
-```
+{% endhighlight %}
 
 The `initialize` event gives an opportunity to set up resources before entering the draw loop.  The `draw` event will
 be called any time the map is panned or zoomed.  If the attribute `animationLoop` on the constructor argument is truthy,
@@ -171,13 +159,7 @@ it's pixels to be spatially positioned.  This is the format in which you will fi
 bathymetry, ground coloring, or continuously varying data (a heatmap or vegetation coverage map would likely be available
 as a GeoTIFF).
 
-[^datum]: When making a map, this can be really big pitfall.  Data can be found in all sorts of different geographic
-reference systems, and they aren't directly compatible- they have to be translated back and forth.  When you find a
-shapefile, make sure you make note of the datum- TileMill can fix it for you, but you have to tell it what to expect.
-Data from Natural Earth is all in WGS84 which is something of a web mapping default and it's what TileMill expects,
-but it can make for a nasty surprise.  For example another big source of data is census data, known as TIGER/Line.  That
-data uses a datum called NAD83. These datum are also known by an 'EPSG' entry number- WGS84 is EPSG:4326 and NAD83 is
-EPSG:4269.
+[^datum]: When making a map, this can be really big pitfall.  Data can be found in all sorts of different geographic reference systems, and they aren't directly compatible- they have to be translated back and forth.  When you find a shapefile, make sure you make note of the datum- TileMill can fix it for you, but you have to tell it what to expect.  Data from Natural Earth is all in WGS84 which is something of a web mapping default and it's what TileMill expects, but it can make for a nasty surprise.  For example another big source of data is census data, known as TIGER/Line.  That data uses a datum called NAD83. These datum are also known by an 'EPSG' entry number- WGS84 is EPSG:4326 and NAD83 is EPSG:4269.
 
 ## Using Our Tile Set
 
@@ -273,11 +255,7 @@ video card's render cores, and then we need to attach it to the current context.
 the next run of the program using _uniform variables_.  We specify how to map _attribute variables_ to vertexes, and
 finally with  the state prepared we can call `gl.drawArrays()` and the whole pipeline is distributed and set in motion.
 
-[^webgl_lernings]: This is obviously a comically simplified version of WebGL with large portions that we aren't using
-for this example missing (including features that were used in the prior prototype). The
-[WebGL Programming Guide](http://www.amazon.com/WebGL-Programming-Guide-Interactive-Graphics/dp/0321902920) is a good
-place to start, as is the
-[OpenGL ES 2.0 Programming Guide](http://www.amazon.com/OpenGL-ES-2-0-Programming-Guide/dp/0321502795).
+[^webgl_lernings]: This is obviously a comically simplified version of WebGL with large portions that we aren't using for this example missing (including features that were used in the prior prototype). The [WebGL Programming Guide](http://www.amazon.com/WebGL-Programming-Guide-Interactive-Graphics/dp/0321902920) is a good place to start, as is the [OpenGL ES 2.0 Programming Guide](http://www.amazon.com/OpenGL-ES-2-0-Programming-Guide/dp/0321502795).
 
 ### Vertex Shaders and Fragment Shaders
 
@@ -290,9 +268,7 @@ vertexes in the primitive it belongs to (the other two vertexes for a triangle, 
 a point), figures out what pixels in the image may[^frag-vs-pixel] change based on the primitive. It then calls
 the fragment shader for each pixel which assigns the color or discards it.
 
-[^frag-vs-pixel]: It's called a fragment shader and not a pixel shader because the output of a fragment shader might
-not actually change a pixel.  As a simple example, OpenGL will take a look at the z-axis value of the pixel- if it
-would be occluded by another fragment in the buffer the pixel will be discarded.
+[^frag-vs-pixel]: It's called a fragment shader and not a pixel shader because the output of a fragment shader might not actually change a pixel.  As a simple example, OpenGL will take a look at the z-axis value of the pixel- if it would be occluded by another fragment in the buffer the pixel will be discarded.
 
 ### Uniforms, Varyings, and Attributes
 
@@ -309,10 +285,7 @@ the other vertex sets `vColor` to `vec3(0.0, 1.0, 0.0)`, the fragment will read 
 The final type of variable is an attribute- attributes are per-vertex values that are supplied as the input to the
 OpenGL pipeline.
 
-[^glsl-types]: GLSL doesn't do conversion of types for you- and that includes the conversion of an int to a float as we
-have come to expect from the C family of languages.  If you specify a `vec3(1, 0.0, 0.0)`, GLSL will refuse to compile
-because of the mixed types. While this makes sense, it goes contrary to a behavior we may expect from other programming
-languages.  It has been the source of an inordinate amount of cursing as I have learned to use GLSL effectively.
+[^glsl-types]: GLSL doesn't do conversion of types for you- and that includes the conversion of an int to a float as we have come to expect from the C family of languages.  If you specify a `vec3(1, 0.0, 0.0)`, GLSL will refuse to compile because of the mixed types. While this makes sense, it goes contrary to a behavior we may expect from other programming languages.  It has been the source of an inordinate amount of cursing as I have learned to use GLSL effectively.
 
 ## Plotting Points on a Map
 
@@ -372,12 +345,18 @@ float scale_factor(float zoom) {
 }
 
 vec2 transform(vec2 point, float zoom) {
-    vec2 result = vec2((((0.5 / M_PI) * point.x) + 0.5), ((-0.5 / M_PI) * point.y + 0.5)) * scale_factor(zoom);
+    vec2 result = vec2(
+        (((0.5 / M_PI) * point.x) + 0.5), 
+        ((-0.5 / M_PI) * point.y + 0.5)
+    ) * scale_factor(zoom);
     return result;
 }
 
 vec2 project(vec2 point) {
-    vec2 result = vec2(point.x * DEG_TO_RAD, log(tan((M_PI / 4.0) + (point.y * DEG_TO_RAD ) / 2.0)));
+    vec2 result = vec2(
+        point.x * DEG_TO_RAD, 
+        log(tan((M_PI / 4.0) + (point.y * DEG_TO_RAD ) / 2.0))
+    );
     return result;
 }
 
@@ -390,9 +369,7 @@ void main() {
 With this in place, we simply specify our x-values as degrees longitude and our y-values as degrees
 latitude[^xy-ordering].
 
-[^xy-ordering]: One source of constant frustration is that geographic coordinates are specified in lat-lon order,
-meaning that north-south comes first, east-west second.  Cartesian coordinates are specified in x, y.  As latitude
-corresponds to y and longitude corresponds to x, there is a lot of opportunity for error.
+[^xy-ordering]: One source of constant frustration is that geographic coordinates are specified in lat-lon order, meaning that north-south comes first, east-west second.  Cartesian coordinates are specified in x, y.  As latitude corresponds to y and longitude corresponds to x, there is a lot of opportunity for error.
 
 This gets us much of the way there, but we can't ignore z-values.  Since we are drawing all of these points at once,
 if we don't assign a z-value they will all be the same, which turns into a situation called
@@ -439,12 +416,7 @@ edge.  Instead of just discarding, let's ramp the alpha to the closer you get to
 The actual code takes into account an original alpha (`u_color.a`[^swizzleing]) and a potential fade, but this code
 gives us nice, smooth circles.
 
-[^swizzleing]: One clever bit about the GLSL language is that you can refer to elements of a vector type by letter codes.
-Generally a vec4 represents either a location (`xyzw`) or a color (`rgba`).  You can refer to the first element by
-`color.r`, the third element by `color.b` and a vec2 containing both by `color.rb`.  You can even change order-
-`color.argb` is perfectly valid and will return a vec4 with the elements placed in that order, and `color.aaaa` will
-return a vec4 with four copies of the fourth value.  You can even swap the sets (though you can't mix them): `color.x`
-will give you the red value.  But don't do that.
+[^swizzleing]: One clever bit about the GLSL language is that you can refer to elements of a vector type by letter codes.  Generally a vec4 represents either a location (`xyzw`) or a color (`rgba`).  You can refer to the first element by `color.r`, the third element by `color.b` and a vec2 containing both by `color.rb`.  You can even change order- `color.argb` is perfectly valid and will return a vec4 with the elements placed in that order, and `color.aaaa` will return a vec4 with four copies of the fourth value.  You can even swap the sets (though you can't mix them): `color.x` will give you the red value.  But don't do that.
 
 # The 'Finished' Product
 

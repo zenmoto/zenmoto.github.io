@@ -1,6 +1,8 @@
 name: David's Ramblings
 markdown: kramdown
+highlighter: pygments
 pygments: true
 encoding: UTF-8
 kramdown:
   input: GFM
+  hard_wrap: false
