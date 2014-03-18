@@ -266,14 +266,14 @@ In both of the examples above, we dealt with the circles we are drawing individu
 to the DOM and style it to place it.  With Canvas we fill an arc. With WebGL we put together an array of data that we
 want to render, ship it _en masse_ to the video card and convert them to an image there.
 
-First, we need to set up a _rendering pipeline_[^webgl lernings].  To do this, we have to declare a buffer to hold
+First, we need to set up a _rendering pipeline_[^webgl_lernings].  To do this, we have to declare a buffer to hold
 our data and  'attach' it to the current context. We then need to supply data to that buffer.  We need to compile a
 _vertex shader_  and a _fragment shader_, we need to bind both together into a _program_ that will actually run on the
 video card's render cores, and then we need to attach it to the current context.  We then need to set the context for
 the next run of the program using _uniform variables_.  We specify how to map _attribute variables_ to vertexes, and
 finally with  the state prepared we can call `gl.drawArrays()` and the whole pipeline is distributed and set in motion.
 
-[^webgl lernings]: This is obviously a comically simplified version of WebGL with large portions that we aren't using
+[^webgl_lernings]: This is obviously a comically simplified version of WebGL with large portions that we aren't using
 for this example missing (including features that were used in the prior prototype). The
 [WebGL Programming Guide](http://www.amazon.com/WebGL-Programming-Guide-Interactive-Graphics/dp/0321902920) is a good
 place to start, as is the
@@ -287,10 +287,10 @@ coordinates in our program's coordinate system and we translate and project them
 We do this in two steps. First, we use a vertex shader to take a point in the user coordinate
 system and we return a location in the OpenGL coordinate system. Second, the system correlates the vertex with the other
 vertexes in the primitive it belongs to (the other two vertexes for a triangle, the other one for a line, or none for
-a point), figures out what pixels in the image may[^frag vs pixel] change based on the primitive. It then calls
+a point), figures out what pixels in the image may[^frag-vs-pixel] change based on the primitive. It then calls
 the fragment shader for each pixel which assigns the color or discards it.
 
-[^frag vs pixel]: It's called a fragment shader and not a pixel shader because the output of a fragment shader might
+[^frag-vs-pixel]: It's called a fragment shader and not a pixel shader because the output of a fragment shader might
 not actually change a pixel.  As a simple example, OpenGL will take a look at the z-axis value of the pixel- if it
 would be occluded by another fragment in the buffer the pixel will be discarded.
 
@@ -303,13 +303,13 @@ shader program.  We use these to coordinate between the hosting program and the 
 
 A varying is used for coordinating between a vertex shader and a fragment shader.  For primitives with several vertexes
 the value read by the fragment shader will be interpolated between it's associated vertices.  For example if a fragment
-is at the midpoint of a line one vertex of which sets a varying named `vColor` to `vec3(1.0, 0.0, 0.0)` [^glsl types] and
+is at the midpoint of a line one vertex of which sets a varying named `vColor` to `vec3(1.0, 0.0, 0.0)` [^glsl-types] and
 the other vertex sets `vColor` to `vec3(0.0, 1.0, 0.0)`, the fragment will read `vColor` as `vec3(0.5, 0.5, 0.0)`.
 
 The final type of variable is an attribute- attributes are per-vertex values that are supplied as the input to the
 OpenGL pipeline.
 
-[^glsl types]: GLSL doesn't do conversion of types for you- and that includes the conversion of an int to a float as we
+[^glsl-types]: GLSL doesn't do conversion of types for you- and that includes the conversion of an int to a float as we
 have come to expect from the C family of languages.  If you specify a `vec3(1, 0.0, 0.0)`, GLSL will refuse to compile
 because of the mixed types. While this makes sense, it goes contrary to a behavior we may expect from other programming
 languages.  It has been the source of an inordinate amount of cursing as I have learned to use GLSL effectively.
@@ -388,7 +388,11 @@ void main() {
 ```
 
 With this in place, we simply specify our x-values as degrees longitude and our y-values as degrees
-latitude[^xy ordering].
+latitude[^xy-ordering].
+
+[^xy-ordering]: One source of constant frustration is that geographic coordinates are specified in lat-lon order,
+meaning that north-south comes first, east-west second.  Cartesian coordinates are specified in x, y.  As latitude
+corresponds to y and longitude corresponds to x, there is a lot of opportunity for error.
 
 This gets us much of the way there, but we can't ignore z-values.  Since we are drawing all of these points at once,
 if we don't assign a z-value they will all be the same, which turns into a situation called
