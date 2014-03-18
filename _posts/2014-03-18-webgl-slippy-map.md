@@ -50,12 +50,12 @@ equator rather than along the date line so that the distortion is around the equ
 ![Mercator vs Transverse Mercator](/diagrams/mercator-distortion.png)
 
 At a global scale, Mercator is a horrible projection- we can't correctly compare the sizes of countries (Greenland is
-actually the size of Algeria) and we never navigate at that scale[^great circle charts].  But there are
+actually the size of Algeria) and we never navigate at that scale[^great-circle-charts].  But there are
 many projections- conical, cylindrical, gnomonic, isometric. In the end, a projection is just a mathematical
 [function](http://en.wikipedia.org/wiki/Function_(mathematics)) that takes an input of geographic coordinates and
 returns a set of cartesian coordinates suitable for a two-dimensional representation.
 
-[^great circle charts]: In a previous life I was a [Quartermaster](http://en.wikipedia.org/wiki/Quartermaster) in the
+[^great-circle-charts]: In a previous life I was a [Quartermaster](http://en.wikipedia.org/wiki/Quartermaster) in the
 U.S. Coast Guard.  During my tenure there I got to plan several long cruises- the first was from Sitka, AK to
 Honolulu, HI.  While we are all familiar with the adage that the 'closest distance between two points is a straight line',
 that doesn't make much sense in navigation- with a round planet, the closest distance between two points leads
@@ -90,20 +90,20 @@ tile we can easily determine the points within.  Mercator enables the 'Slippy Ma
 These days when we think about maps on the Internet we think about Google Maps. Before Google Maps came Mapquest. Now
 we have a huge variety of online maps (Bing, OpenStreetMap, Apple Maps), libraries to work with them (OpenLayers, Modest
 Maps, Google Maps API, Leaflet.js), and cloud mapping infrastructure (CloudMade, OpenStreetMaps, Google Maps).  But all
-the big players share a few things in common- they are all based on the Spherical Mercator[^spherical mercator]
+the big players share a few things in common- they are all based on the Spherical Mercator[^spherical_mercator]
 projection and they are all based on a uniform grid overlaid upon that projection.  In other words, (absent licensing
 restrictions), you can use ModestMaps with Google Maps tiles.  Or Leaflet with OpenStreetMaps.  The URLs (and the URL
-patterns) are similar; there is a difference between OpenStreetMaps and Google Maps in that the y-axis[^y-axis] is
+patterns) are similar; there is a difference between OpenStreetMaps and Google Maps in that the y-axis[^y_axis] is
 counts up from the bottom in one and from the top in the other, but generally they are all built on the same model.
 
-[^spherical mercator]: The Earth is not, as many of us have been taught, a globe or a sphere.  It's wider at the equator
+[^spherical_mercator]: The Earth is not, as many of us have been taught, a globe or a sphere.  It's wider at the equator
 than it is at the poles, making it an _oblong spheroid_.  In fact it's not actually even an oblong sphereoid- it's
 not regular in that description either.  As we describe the Earth more and more accurately, we use different
 [datums](http://en.wikipedia.org/wiki/Datum_(geodesy)) to better describe the unique shape of the earth.  The _spherical_
 in Spherical Mercator means that we simplify everything by presuming that the Earth is a sphere.  My high school physics
 teacher would be proud.
 
-[^y-axis]: I talked a lot above about latitude __not__ being the _y_ axis- why am I using _y_ axis here?  It's a subtle
+[^y_axis]: I talked a lot above about latitude __not__ being the _y_ axis- why am I using _y_ axis here?  It's a subtle
 point that took me a while to really understand- projection is taking a location on a globe and placing it on a
 cartesian plane. If we are talking about a point on the globe it's latitude.  If we are talking about a spot on a _map_,
 a two-dimensional representation, it's the _y_ axis as we suspected all along.
